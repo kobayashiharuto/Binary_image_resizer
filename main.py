@@ -7,29 +7,21 @@ from PIL import Image
 import glob
 import matplotlib.pyplot as plt
 
+np.set_printoptions(threshold=10000)
+
 
 def show_image(image):
     plt.imshow(image)
     plt.show()
 
 
-def convert_binary_image(image):
-    image_gray = image.convert('L')
-    image_binary = np.array(image_gray, dtype='f')
-    resized_image = (image_binary > 100) * 1
-    show_image(resized_image)
-    return Image.fromarray(resized_image, mode='L')
-
-
 def resize(path: str):
     image = Image.open(path)
     image_resized = image.resize(size=(50, 50))
-    binary_image = convert_binary_image(image_resized)
-    show_image(binary_image)
-    return binary_image
+    image_gray = image.convert('L')
+    return image_gray
 
 
-# ディレクトリから画像パス一覧を取得する
 def get_images_from_dir(path: str):
     files = glob.glob(path + '/*')
     return files
