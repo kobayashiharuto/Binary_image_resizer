@@ -43,11 +43,11 @@ def main():
     paths = get_images_from_dir(directory)
 
     for path in paths:
-        image = Image.open(path)
-        resized_image = resize(image)
-        binary_image = convert_binary_image(resized_image)
-        name = path.split('\\')[-1]
-        binary_image.save('out/1/' + name)
+        with Image.open(path) as image:
+            resized_image = resize(image)
+            binary_image = convert_binary_image(resized_image)
+            name = path.split('\\')[-1]
+            binary_image.save('out/1/' + name)
 
 
 if __name__ == '__main__':
