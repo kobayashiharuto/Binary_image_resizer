@@ -5,19 +5,32 @@ import tkinter.filedialog
 import numpy as np
 from PIL import Image
 import glob
+import matplotlib.pyplot as plt
+
+
+def show_image(image):
+    plt.imshow(image)
+    plt.show()
+
+
+def convert_binary_image(image):
+    image_gray = image.convert('L')
+    image_binary = np.array(image_gray, dtype='f')
+    resized_image = (image_binary > 100) * 1
+    show_image(resized_image)
+    return Image.fromarray(resized_image, mode='L')
 
 
 def resize(path: str):
     image = Image.open(path)
-    image_resized = image.resize(size=(28, 28))
-    image_gray = image_resized.convert('L')
-    image_binary = np.array(image_gray, dtype='f')
-    resized_image = (image_binary > 20) * 1
-    return Image.fromarray(resized_image)
+    image_resized = image.resize(size=(50, 50))
+    binary_image = convert_binary_image(image_resized)
+    show_image(binary_image)
+    return binary_image
 
 
 # ディレクトリから画像パス一覧を取得する
-def get_images_from_dir(self, path: str):
+def get_images_from_dir(path: str):
     files = glob.glob(path + '/*')
     return files
 
@@ -27,10 +40,12 @@ def main():
     directory = tkinter.filedialog.askdirectory(
         initialdir=os.path.abspath(os.path.dirname(__file__)))
 
-    file_paths = get_images_from_dir(directory)
+    paths = get_images_from_dir(directory)
 
-    images = [resize(path) for path in file_paths]
-    
+    for path in paths:
+        image = resize(path)
+        name = path.split('\\')[-1]
+        image.save('out/1/' + name)
 
 
 if __name__ == '__main__':
